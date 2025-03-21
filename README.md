@@ -1,8 +1,8 @@
-# Kotlin GUI Starter
+# Kotlin GUI Pop-Up Dialog Demo
 
-This is a starter project for a simple Kotlin GUI application.
+This is a demo of how to create and manage a pop-up dialog window as part of your application.
 
-The Java Swing library is used, plus the FlatLAF look-and-feel for a reasonably modern look.
+The pop-up is modal - this means that it retains focus, and the main window can't be interacted with until the pop-up is closed.
 
-The app is structured to provide a simple view / model setup with the App class storing application data (the 'model'), and the MainWindow class providing the 'view'.
+The pop-up is tied to the mainWindow, and is given access to the app data model
 
