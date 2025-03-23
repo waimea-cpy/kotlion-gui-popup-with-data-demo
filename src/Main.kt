@@ -43,7 +43,7 @@ class App() {
  * Defines the UI and responds to events
  * The app model should be passwd as an argument
  */
-class MainWindow(val app: App) : JFrame(), ActionListener, ComponentListener {
+class MainWindow(val app: App) : JFrame(), ActionListener {
 
     // Fields to hold the UI elements
     private lateinit var numberLabel: JLabel
@@ -71,7 +71,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener, ComponentListener {
      */
     private fun configureWindow() {
         title = "Kotlin Swing GUI Pop-Up Demo"
-        contentPane.preferredSize = Dimension(600, 350)
+        contentPane.preferredSize = Dimension(400, 175)
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         isResizable = false
         layout = null
@@ -86,18 +86,17 @@ class MainWindow(val app: App) : JFrame(), ActionListener, ComponentListener {
         // Create the pop-up, passing on the app object and a link
         // back to this main window
         examplePopUp = PopUpDialog(app, this)
-        examplePopUp.addComponentListener(this)
 
-        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
+        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 24)
 
         numberLabel = JLabel("WORD HERE")
         numberLabel.horizontalAlignment = SwingConstants.CENTER
-        numberLabel.bounds = Rectangle(50, 50, 500, 100)
+        numberLabel.bounds = Rectangle(25, 25, 350, 50)
         numberLabel.font = baseFont
         add(numberLabel)
 
         openButton = JButton("Open The Pop-Up")
-        openButton.bounds = Rectangle(50,200,500,100)
+        openButton.bounds = Rectangle(25, 100, 350, 50)
         openButton.font = baseFont
         openButton.addActionListener(this)     // Handle any clicks
         add(openButton)
@@ -117,89 +116,84 @@ class MainWindow(val app: App) : JFrame(), ActionListener, ComponentListener {
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
             openButton -> {
-                examplePopUp.updateView()       // Make sure the pop-up is up-to-date with the model
+                examplePopUp.updateView()
                 examplePopUp.isVisible = true   // And show it
             }
         }
     }
-
-    override fun componentResized(e: ComponentEvent?) {
-        // Should never be called if not resizable!
-    }
-
-    override fun componentMoved(e: ComponentEvent?) {
-        // We probably don't care about this!
-    }
-
-    override fun componentShown(e: ComponentEvent?) {
-        // Make sure the dialog view is up to date
-        examplePopUp.updateView()
-    }
-
-    override fun componentHidden(e: ComponentEvent?) {
-        // Make sure out view is up to date with any changes
-        updateView()
-    }
-
 }
 
 
 /**
  * Displays a modal dialog
  * The app data model is passed as an argument so
- * that the model can be accessed
+ * that the model can be accessed, as is the parent
+ * window object, so that this can be accessed too
  */
 class PopUpDialog(val app: App, val mainWindow: MainWindow): JDialog(), ActionListener {
-    private lateinit var messageLabel: JLabel
+    private lateinit var wordLabel: JLabel
     private lateinit var wordText: JTextField
 
+    /**
+     * Configure the UI
+     */
     init {
         configureWindow()
         addControls()
         setLocationRelativeTo(null)     // Centre the window
     }
 
+    /**
+     * Setup the dialog window
+     */
     private fun configureWindow() {
         title = "Example Pop-Up"
-        contentPane.preferredSize = Dimension(500, 400)
+        contentPane.preferredSize = Dimension(400, 500)
         isResizable = false
         isModal = true
         layout = null
         pack()
     }
 
+    /**
+     * Populate the window with controls
+     */
     private fun addControls() {
-        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 20)
-        val bigFont = Font(Font.SANS_SERIF, Font.PLAIN, 40)
+        val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 24)
+        val smallFont = Font(Font.SANS_SERIF, Font.PLAIN, 16)
 
-        messageLabel = JLabel("MESSAGE")
-        messageLabel.bounds = Rectangle(20,20,460,260)
-        messageLabel.verticalAlignment = SwingConstants.TOP
-        messageLabel.font = baseFont
-        add(messageLabel)
+        // Adding <html> to the label text allows it to wrap
+        val message = JLabel("<html>This is an example pop-up dialog window. Like any window it can have controls, respond to events, etc. <br><br>It is a <em>modal</em> window, so it grabs the focus, and the main window can't be interacted with until this pop-up is closed. <br><br>It also has access to the app's <em>data model</em>, allowing it to access and update data values in the app. Try typing a new word and pressing Enter to see the app data being updated across the whole app...")
+        message.bounds = Rectangle(25, 25, 350, 300)
+        message.verticalAlignment = SwingConstants.TOP
+        message.font = smallFont
+        add(message)
+
+        wordLabel = JLabel("WORD HERE")
+        wordLabel.bounds = Rectangle(25, 350, 350, 50)
+        wordLabel.horizontalAlignment = SwingConstants.CENTER
+        wordLabel.font = baseFont
+        add(wordLabel)
 
         wordText = JTextField()
-        wordText.bounds = Rectangle(20,300,460,80)
+        wordText.bounds = Rectangle(25, 425, 350, 50)
         wordText.horizontalAlignment = SwingConstants.CENTER
-        wordText.font = bigFont
+        wordText.font = baseFont
         wordText.addActionListener(this)
         add(wordText)
     }
 
+    /**
+     * Update the view with data from the data model
+     */
     fun updateView() {
-        // Adding <html> to the label text allows it to wrap
-        var message = "<html>This is an example pop-up dialog window."
-        message += "<br><br>Just like the main window, it can have controls, respond to events, etc."
-
-        message += "<br><br>It can also access the app data model. For example, the current word is: "
         // Accessing data from the app 'model' - the data fields in the App class
-        message += app.currentWord
-
-        message += "<br><br>Type in a new word below and press Enter to update the app model..."
-
-        messageLabel.text = message
+        wordLabel.text = "The word is: ${app.currentWord}"
     }
 
+    /**
+     * Handle UI actions such as button clicks
+     */
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
             wordText -> {
