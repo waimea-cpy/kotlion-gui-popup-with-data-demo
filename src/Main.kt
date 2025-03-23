@@ -46,7 +46,7 @@ class App() {
 class MainWindow(val app: App) : JFrame(), ActionListener {
 
     // Fields to hold the UI elements
-    private lateinit var numberLabel: JLabel
+    private lateinit var wordLabel: JLabel
     private lateinit var openButton: JButton
 
     // Dialogs
@@ -89,11 +89,11 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
 
         val baseFont = Font(Font.SANS_SERIF, Font.PLAIN, 24)
 
-        numberLabel = JLabel("WORD HERE")
-        numberLabel.horizontalAlignment = SwingConstants.CENTER
-        numberLabel.bounds = Rectangle(25, 25, 350, 50)
-        numberLabel.font = baseFont
-        add(numberLabel)
+        wordLabel = JLabel("WORD HERE")
+        wordLabel.horizontalAlignment = SwingConstants.CENTER
+        wordLabel.bounds = Rectangle(25, 25, 350, 50)
+        wordLabel.font = baseFont
+        add(wordLabel)
 
         openButton = JButton("Open The Pop-Up")
         openButton.bounds = Rectangle(25, 100, 350, 50)
@@ -107,7 +107,7 @@ class MainWindow(val app: App) : JFrame(), ActionListener {
      * Update the UI controls based on the current state of the application model
      */
     fun updateView() {
-        numberLabel.text = "The word is: " + app.currentWord
+        wordLabel.text = "The word is: " + app.currentWord
     }
 
     /**
